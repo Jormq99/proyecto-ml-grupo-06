@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+.egg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Data (no subir datos crudos a repo)
+data/raw/
+data/processed/
+data/*.csv
+data/*.parquet
+data/*.pkl
+data/*.zip
+data/example_figures/
+data/test_eegs/
+data/test_spectrograms/
+data/train_eegs/
+data/train_spectrograms/
+!data/README.md
+
+# Model files (muy pesados)
+models/
+*.pkl
+*.joblib
+*.h5
+*.model
+
+# Results (guardar localmente)
+results/figures/*.png
+results/figures/*.pdf
+results/figures/*.jpg
+results/figures/*.jpeg
+results/*.csv
+!results/README.md
+
+# Environment variables
+.env
+.env.local
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+temp/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Miscellaneous
+.cache/
+.pytest_cache/
+*.egg-info
+.coverage
+htmlcov/
