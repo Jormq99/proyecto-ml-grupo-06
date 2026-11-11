@@ -101,14 +101,14 @@ El proyecto sigue las 6 fases de CRISP-DM:
 | Etapa | Actividad | Estado |
 |-------|-----------|--------|
 | 1 | Propuesta Inicial | Completado |
-| 2 | Configuración y Planificación | En Progreso |
-| 3 | Comprensión de Datos (EDA) | Pendiente |
-| 4 | Preparación + Baseline | Pendiente |
-| 5 | Modelado y Experimentación | Pendiente |
-| 6 | Evaluación e Interpretación | Pendiente |
+| 2 | Configuración y Planificación | Completado |
+| 3 | Comprensión de Datos (EDA) | Parcial |
+| 4 | Preparación + Baseline | En Progreso |
+| 5 | Modelado y Experimentación | En Progreso (primera CNN) |
+| 6 | Evaluación e Interpretación | En Progreso (resultados preliminares) |
 | 7 | Entrega Final | Pendiente |
 
-**Última actualización:** 2026-09-01
+**Última actualización:** 2026-11-10
 
 ## Documentación
 

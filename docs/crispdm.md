@@ -4,7 +4,7 @@
 
 Este documento registra el progreso del proyecto a través de las **6 fases de la metodología CRISP-DM**. Se actualiza continuamente durante el desarrollo, no solo al final.
 
-**Última actualización:** 2026-09-01
+**Última actualización:** 2026-11-10
 
 ---
 
@@ -53,12 +53,12 @@ Este documento registra el progreso del proyecto a través de las **6 fases de l
 
 ## Fase 2: Data Understanding / Comprensión de los Datos
 
-### Estado: 📋 Pendiente
+### Estado: 🔄 Parcial
 
 #### 2.1 Descripción del Dataset
-- [ ] Fuente de datos: HMS Kaggle Competition (Confirmado)
-- [ ] Número de muestras: ~17,000 registros EEG
-- [ ] Número de features: [A determinar en EDA]
+- [x] Fuente de datos: HMS Kaggle Competition
+- [x] 106,800 filas etiquetadas y 1,950 pacientes
+- [x] Seis objetivos probabilísticos a partir de votos de especialistas
 - [ ] Período temporal: 10-60 segundos de actividad cerebral por registro
 - [ ] Granularidad: Uno-a-uno: cada registro → una categoría
 
@@ -77,9 +77,10 @@ Este documento registra el progreso del proyecto a través de las **6 fases de l
 #### 2.3 Análisis Exploratorio (EDA)
 
 **Tareas principales:**
-- [ ] Distribución de clases (target): % de cada patología
+- [x] Distribución de votos por clase
+- [x] Conteo de valores faltantes en metadatos de desarrollo
 - [ ] Distribución por banda de frecuencia
-- [ ] Valores faltantes y outliers
+- [ ] Análisis de outliers
 - [ ] Correlaciones entre bandas
 - [ ] Patrones visuales en espectrogramas por clase
 
@@ -96,7 +97,9 @@ Este documento registra el progreso del proyecto a través de las **6 fases de l
 - [ ] Simetría entre hemisferios cerebrales (canales izq vs derech)
 
 #### 2.5 Decisiones Tomadas
-- [ ] [Serán documentadas aquí]
+- [x] Reservar pacientes completos antes del análisis y mantenerlos fuera de los experimentos iniciales.
+- [x] Agrupar los folds por paciente y conservar los seis votos como objetivos probabilísticos.
+- [ ] Completar el análisis de patrones espectrales y documentar hallazgos por clase.
 
 **Próxima fase**: Data Preparation
 **Responsable**: [A ASIGNAR]
@@ -105,7 +108,7 @@ Este documento registra el progreso del proyecto a través de las **6 fases de l
 
 ## Fase 3: Data Preparation / Preparación de los Datos
 
-### Estado: 📋 Pendiente
+### Estado: 🔄 Parcial
 
 #### 3.1 Limpieza de Datos
 - [ ] Tratamiento de valores faltantes: [Método]
@@ -149,11 +152,11 @@ Este documento registra el progreso del proyecto a través de las **6 fases de l
 - **Métrica**: Usar Macro F1-Score en validación (no accuracy)
 
 #### 3.5 Dataset Final
-- **Train shape**: [X_train (Nsamples, features)] - Estratificado
-- **Test shape**: [X_test (Nsamples, features)]
-- **Features totales**: [Número]
-- **Distribución train**: [% por clase]
-- **Distribución test**: [% por clase]
+- **Preparación disponible**: folds agrupados por paciente, objetivos probabilísticos y extracción de ventanas de espectrograma.
+- **Entrada inicial de la CNN**: ventana de 50 segundos, redimensionada a una matriz 64 × 64 de una sola banda.
+- **Prueba inicial**: 480 filas de entrenamiento y 240 de validación; se conserva como piloto y no como resultado final.
+- **Corrida actual**: fold 1 completo, con 67,305 filas de entrenamiento y 16,826 de validación, manteniendo la distribución natural. El holdout reservado no se usa.
+- **Pendiente**: medir variación en folds no consultados (2–4) y justificar cualquier cambio de transformaciones o manejo del desbalance antes de ejecutarlo.
 
 **Próxima fase**: Modeling
 **Responsable**: [A ASIGNAR]
@@ -162,73 +165,24 @@ Este documento registra el progreso del proyecto a través de las **6 fases de l
 
 ## Fase 4: Modeling / Modelado
 
-### Estado: 📋 Pendiente
+### Estado: 🔄 Parcial — primera corrida completa de desarrollo ejecutada
 
-#### 4.1 Enfoques Evaluados
+#### 4.1 Modelo inicial
+- **Arquitectura**: CNN pequeña entrenada desde cero con espectrogramas de una banda.
+- **Entrenamiento**: 67,305 ejemplos, 3 épocas predefinidas, fold 1; CPU.
+- **Validación**: 16,826 ejemplos del fold 1, separado por paciente, registro EEG y espectrograma.
+- **Accuracy**: 0.3910; **Macro F1**: 0.3836.
+- **Referencia de clase mayoritaria**: accuracy 0.1993; Macro F1 0.0554.
+- **Recall por clase**: Seizure 0.4131, LPD 0.2901, GPD 0.1953, LRDA 0.5175, GRDA 0.5085, Other 0.3977.
+- **Curva Macro F1 de validación por época**: 0.3162, 0.4212 y 0.3836. Se reporta la tercera época, fijada antes de la corrida; no se seleccionó la época con la validación.
+- **Gráficas**: historial de entrenamiento, distribución de clases, matriz de confusión y métricas por clase, generadas en `results/figures/`.
 
-##### Enfoque 1: Estático (Baseline)
+Esta corrida usa todo el conjunto de desarrollo disponible para el fold, pero solo evalúa un fold ya consultado. Es una medición exploratoria; no permite conclusiones clínicas ni sustituye la evaluación final en el holdout.
 
-**Modelo**: Logistic Regression (Multinomial)
-```python
-LogisticRegression(
-    multi_class='multinomial',
-    max_iter=1000,
-    class_weight='balanced'
-)
-```
-- **AUC-ROC**: [PENDIENTE]
-- **NDCG@5**: [PENDIENTE]
-- **Tiempo entrenamiento**: [PENDIENTE]s
-- **Características**: Features estáticas (Recency, Frequency, Monetary)
-
-**Modelo**: XGBoost con features estáticas
-```python
-XGBClassifier(
-    objective='multi:softprob',
-    max_depth=6,
-    learning_rate=0.1,
-    n_estimators=100
-)
-```
-- **AUC-ROC**: [PENDIENTE]
-- **NDCG@5**: [PENDIENTE]
-- **Feature Importance**: [PENDIENTE]
-
-##### Enfoque 2: Con Time-Decay
-
-**Modelo**: XGBoost con time-decay features
-```python
-# Features incluyen:
-# - exp(-t/τ) donde τ = vida media estimada
-# - Suma ponderada de montos
-# - Frecuencia ponderada
-```
-- **AUC-ROC**: [PENDIENTE]
-- **NDCG@5**: [PENDIENTE]
-- **Mejora vs baseline**: [PENDIENTE]%
-- **Vida media (τ) estimada**: [PENDIENTE] días
-
-##### Enfoque 3: Dinámico (Grafos)
-
-**Modelo**: GNN o LSTM (si complejidad lo permite)
-- **Arquitectura**: [PENDIENTE]
-- **AUC-ROC**: [PENDIENTE]
-- **NDCG@5**: [PENDIENTE]
-- **Complejidad computacional**: [PENDIENTE]
-
-#### 4.2 Hyperparameter Tuning
-
-**Modelo seleccionado**: [A DECIDIR]
-
-Grid Search / Random Search:
-- [ ] Parámetros testeados: [PENDIENTE]
-- [ ] Mejor combinación: [PENDIENTE]
-- [ ] Mejora vs default: [PENDIENTE]%
-
-#### 4.3 Validación
-- [ ] Stratified K-Fold (k=5): [PENDIENTE]
-- [ ] Temporal Split (train [t0-t1], test [t1-t2]): [PENDIENTE]
-- [ ] Learning curves: [Sobreajuste detectado?]
+#### 4.2 Pendiente
+- [ ] Repetir el protocolo fijado en los folds de desarrollo no consultados 2–4 para medir variación.
+- [ ] Probar una CNN preentrenada solo si puede hacerse una comparación controlada con la misma partición y datos.
+- [ ] Investigar el sobreajuste observado en la pérdida de validación, sin reajustar retrospectivamente esta corrida.
 
 **Próxima fase**: Evaluation
 **Responsable**: [A ASIGNAR]
@@ -237,31 +191,33 @@ Grid Search / Random Search:
 
 ## Fase 5: Evaluation / Evaluación
 
-### Estado: 📋 Pendiente
+### Estado: 🔄 Parcial — evaluación exploratoria en el fold 1
 
 #### 5.1 Métricas de Rendimiento
 
-| Métrica | Baseline | Mejor Modelo | Mejora |
-|---------|----------|-------------|--------|
-| Accuracy | [%] | [%] | [%] |
-| Macro F1 | [%] | [%] | [%] |
-| AUC-ROC | [%] | [%] | [%] |
-| NDCG@5 | [%] | [%] | [%] |
-| NDCG@10 | [%] | [%] | [%] |
-| Precision@5 | [%] | [%] | [%] |
-| Recall@5 | [%] | [%] | [%] |
+| Métrica | Clase mayoritaria | CNN inicial |
+|---------|-------------------|-------------|
+| Accuracy | 0.1993 | 0.3910 |
+| Macro F1 | 0.0554 | 0.3836 |
+
+Estos valores corresponden a 16,826 ejemplos de validación en el fold 1; no son métricas del holdout. La corrida piloto de 240 ejemplos del fold 0, registrada arriba en esta bitácora, es distinta y no se mezcla con esta comparación.
 
 #### 5.2 Análisis de Errores
 
-**Matriz de Confusión:**
-```
-[Matriz será completada durante evaluación]
-```
+La matriz de confusión del piloto aleatorio (240 ejemplos, filas = clase real, columnas = predicción) fue:
 
-**Productos frecuentemente confundidos:**
-- Producto A ↔ Producto B: [% de confusión]
-- Razón: [Análisis]
-- Impacto: [Crítico / Medio / Bajo]
+| Real \ Predicción | Seizure | LPD | GPD | LRDA | GRDA | Other |
+|-------------------|--------:|----:|----:|-----:|-----:|------:|
+| Seizure | 37 | 0 | 6 | 0 | 0 | 0 |
+| LPD | 36 | 0 | 9 | 0 | 0 | 0 |
+| GPD | 4 | 0 | 31 | 0 | 0 | 0 |
+| LRDA | 32 | 0 | 1 | 0 | 0 | 0 |
+| GRDA | 42 | 0 | 3 | 0 | 0 | 0 |
+| Other | 35 | 0 | 4 | 0 | 0 | 0 |
+
+El modelo solo predijo Seizure y GPD en esta corrida; cuatro clases quedaron sin aciertos. La matriz también se guarda en `results/hms_cnn_confusion_matrix.csv`.
+
+Para la corrida completa del fold 1, el notebook 04 genera la matriz de confusión y gráficas de métricas por clase, distribución de clases y comparación con la referencia mayoritaria. La pérdida de validación disminuye hasta la época 2 y aumenta en la época 3; dado que las tres épocas se fijaron previamente, no se cambia retrospectivamente el resultado reportado.
 
 #### 5.3 Interpretabilidad
 
@@ -277,17 +233,10 @@ Grid Search / Random Search:
 
 #### 5.4 Validación de Hipótesis
 
-- **H1**: Modelos con time-decay > Sin time-decay
-  - [ ] **Resultado**: [PENDIENTE]
-  - [ ] **Diferencia estadística**: [t-test / Mann-Whitney]
-
-- **H2**: Grafos dinámicos > Features estáticas
-  - [ ] **Resultado**: [PENDIENTE]
-  - [ ] **Diferencia estadística**: [PENDIENTE]
-
-- **H3**: Vida media varía por segmento
-  - [ ] **Resultado**: [PENDIENTE]
-  - [ ] **Segmentos identificados**: [PENDIENTE]
+- **H1**: La CNN supera una referencia de clase mayoritaria.
+  - [x] Resultado preliminar: sí en esta muestra pequeña; requiere más folds y datos.
+- **H2**: Una CNN preentrenada supera la CNN entrenada desde cero.
+  - [ ] Pendiente: `torchvision` no está instalado; no se ha probado transferencia de aprendizaje.
 
 #### 5.5 Limitaciones
 - [ ] [A documentar]
@@ -304,7 +253,7 @@ Grid Search / Random Search:
 #### 6.1 Modelo Final Seleccionado
 - **Nombre**: [PENDIENTE]
 - **Versión**: [PENDIENTE]
-- **Rendimiento**: AUC-ROC [%], NDCG@5 [%]
+- **Rendimiento**: Macro F1, sensibilidad por clase y métricas acordes con los objetivos probabilísticos.
 - **Justificación**: [PENDIENTE]
 
 #### 6.2 Reproducibilidad
@@ -334,17 +283,30 @@ Grid Search / Random Search:
 - **Tipo de apoyo**: [ej. Template generado, revisión de código]
 - **Verificación**: [ej. El equipo adaptó y validó manualmente todos los outputs]
 
+## Protocolo para evitar leakage y snooping
+
+Se adaptan buenas prácticas vistas en TP1, TP2 y TP3 al tipo de datos HMS:
+
+1. **Separar por paciente, no por fila.** Una fila es un segmento, no una persona independiente. Si segmentos del mismo paciente aparecen en entrenamiento y validación, el modelo puede reconocer características personales y aparentar que generaliza mejor. Por eso se reserva un grupo de pacientes y se crean folds agrupados; además, el código comprueba que no se compartan registros EEG ni espectrogramas entre ambos lados.
+2. **Mantener aparte el holdout final.** Se usa desarrollo para explorar y comparar; el holdout de pacientes reservado no participa en entrenamiento, selección, gráficos ni decisiones. Se consulta una sola vez cuando el pipeline quede congelado.
+3. **Comparar candidatos con el mismo protocolo.** Igual fold, tamaño de muestra, semilla, métrica y presupuesto. El notebook 04 solo lee métricas guardadas; no vuelve a entrenar ni cambia el modelo.
+4. **Registrar las validaciones ya vistas.** El fold 0 se usó para comprobar el flujo y el fold 1 para la primera corrida completa. Ambos se consideran diagnósticos, no se usarán para seguir escogiendo arquitecturas; las comparaciones posteriores se harán en los folds 2–4. El holdout permanece como evaluación final.
+5. **Evitar transformaciones aprendidas con validación.** En esta CNN, el reescalado se calcula por imagen a partir de esa propia ventana; no se ajusta un escalador global con todo el conjunto. Si más adelante se agregan estadísticas globales, normalización por dataset o aumento aprendido, deben ajustarse solo dentro de cada entrenamiento.
+6. **Respetar el objetivo temporal del problema.** Este proyecto clasifica una ventana EEG ya observada; no pronostica el siguiente instante, por lo que las ventanas se extraen del segmento etiquetado. Si se construye un sistema de pronóstico futuro, se deberán usar solo ventanas anteriores al instante de predicción, como se practica en TP2.
+
+La referencia de división aleatoria estratificada de TP3 es útil cuando cada fila es independiente. En HMS se prioriza el paciente como grupo porque varios segmentos pueden proceder de la misma persona; conservar el grupo es más importante que repartir filas al azar.
+
 ---
 
 ## Resumen de Avance
 
 | Fase | Estado | % Completado | Responsable |
 |------|--------|-------------|-------------|
-| 1. Business Understanding | 🔄 En Progreso | 80% | Ambos |
-| 2. Data Understanding | 📋 Pendiente | 0% | [A ASIGNAR] |
-| 3. Data Preparation | 📋 Pendiente | 0% | [A ASIGNAR] |
-| 4. Modeling | 📋 Pendiente | 0% | [A ASIGNAR] |
-| 5. Evaluation | 📋 Pendiente | 0% | [A ASIGNAR] |
+| 1. Business Understanding | ✅ Completado | 100% | Ambos |
+| 2. Data Understanding | 🔄 Parcial | 60% | Ambos |
+| 3. Data Preparation | 🔄 Parcial | 45% | Ambos |
+| 4. Modeling | 🔄 Parcial | 20% | Ambos |
+| 5. Evaluation | 🔄 Parcial | 15% | Ambos |
 | 6. Deployment | 📋 Pendiente | 0% | [A ASIGNAR] |
 
 **Próxima reunión de avance**: [FECHA]
@@ -352,6 +314,6 @@ Grid Search / Random Search:
 
 ---
 
-**Versión**: 2.0
-**Última actualización**: 2026-08-29
-**Próxima revisión**: Semana de 2026-09-05
+**Versión**: 2.1
+**Última actualización**: 2026-11-10
+**Próxima revisión**: Próxima iteración del experimento
