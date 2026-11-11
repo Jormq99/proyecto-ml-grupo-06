@@ -1,165 +1,28 @@
-# Datos del Proyecto: Next-Best-Product
+# Datos del proyecto HMS
 
-## Descripción General
+## Fuente y licencia
 
-Esta carpeta contiene (o referencias a) los datos utilizados en el proyecto de predicción de Next-Best-Product.
+Dataset **HMS - Harmful Brain Activity Classification**, publicado para la competencia de Kaggle: <https://www.kaggle.com/competitions/hms-harmful-brain-activity-classification/data>.
+La licencia indicada por Kaggle es CC BY-NC 4.0. Se requiere iniciar sesión y aceptar las reglas de la competencia antes de descargar.
 
----
+## Descarga y ubicacion
 
-## Estructura
+Descargue el archivo de la competencia HMS desde Kaggle y extraiga el contenido directamente dentro de `data/`. Para los notebooks 01 y 02 se requieren:
 
-```
-data/
-├── README.md              # Este archivo
-└── raw/                   # Datos sin procesar
-    ├── [dataset_file].csv
-    └── README_RAW.md      # Documentación específica
+```text
+data/train.csv
+data/train_spectrograms/<spectrogram_id>.parquet
 ```
 
----
+`train.csv` contiene identificadores de paciente, EEG, segmentos y seis conteos de votos (`seizure_vote`, `lpd_vote`, `gpd_vote`, `lrda_vote`, `grda_vote`, `other_vote`). Los espectrogramas están repartidos en archivos Parquet individuales; el nombre de cada archivo es su `spectrogram_id`. Los EEG crudos pueden conservarse para experimentos posteriores, pero no son necesarios para los notebooks 01 y 02.
 
-## Cómo Descargar los Datos
+El notebook 01 busca `data/train.csv` (y conserva rutas alternativas bajo `data/raw/`). El notebook 02 busca `data/train_spectrograms/`. Los notebooks no leen `test.csv`, `sample_submission.csv`, `test_eegs` ni `test_spectrograms`.
 
-### Opción 1: Dataset Público (Kaggle)
+## Protocolo y reproducibilidad
 
-[A COMPLETAR CON INSTRUCCIONES ESPECÍFICAS]
+1. Ejecute `notebooks/01_exploracion.ipynb` primero. Reserva pacientes completos antes del EDA y escribe un manifiesto local en `data/processed/`.
+2. Ejecute `notebooks/02_preprocesamiento.ipynb`. Consume el manifiesto, conserva los seis votos como objetivos probabilisticos y crea folds agrupados por paciente.
+3. Descargue las dependencias con `pip install -r requirements.txt`; `pyarrow` permite leer los archivos Parquet.
+4. No suba el ZIP, los datos crudos ni los artefactos de `data/processed/` al repositorio. `.gitignore` excluye el ZIP y las carpetas de entrenamiento, test y procesamiento para evitar agregar archivos grandes o datos de evaluación.
 
-```bash
-# Requerimientos:
-# 1. Tener kagglehub instalado: pip install kagglehub
-# 2. Autenticación Kaggle configurada (~/.kaggle/kaggle.json)
-
-# Comando:
-python -c "
-import kagglehub
-path = kagglehub.dataset_download('[competition_name]')
-print(f'Dataset descargado en: {path}')
-"
-
-# O manualmente:
-# 1. Ir a [URL Kaggle]
-# 2. Descargar archivo .csv
-# 3. Copiar a data/raw/
-```
-
-### Opción 2: Dataset Privado (Si aplica)
-
-[A COMPLETAR CON INSTRUCCIONES]
-
-```bash
-# Contactar a [responsable]
-# Descargar archivo
-# Colocar en data/raw/
-```
-
-### Opción 3: Dataset Sintético
-
-```bash
-# Generar datos sintéticos
-python src/generate_synthetic_data.py --output data/raw/synthetic_data.csv
-```
-
----
-
-## Descripción del Dataset
-
-[A COMPLETAR DURANTE EDA]
-
-| Atributo | Valor |
-|----------|-------|
-| **Nombre** | [A COMPLETAR] |
-| **Fuente** | [A COMPLETAR] |
-| **Tamaño** | [A COMPLETAR] muestras |
-| **Período temporal** | [A COMPLETAR] |
-| **Variables** | [A COMPLETAR] características |
-| **Licencia** | [A COMPLETAR] |
-
-### Variables Principales
-
-[Tabla a completar durante EDA]
-
----
-
-## Uso en el Proyecto
-
-### Carga de Datos
-
-```python
-# En src/data_preparation.py
-import pandas as pd
-
-def load_data(path='data/raw/[dataset].csv'):
-    """Carga el dataset principal"""
-    df = pd.read_csv(path)
-    return df
-
-# Uso:
-from src.data_preparation import load_data
-df = load_data()
-```
-
-### Preprocesamiento
-
-Ver: `notebooks/02_preprocesamiento.ipynb`
-
-```python
-from src.data_preparation import prepare_data
-X_train, X_test, y_train, y_test, scaler = prepare_data(df)
-```
-
----
-
-## Notas Importantes
-
-### Privacidad
-[Si aplica: datos contienen información sensible, manejar con cuidado]
-
-### Desbalance
-[A COMPLETAR: Distribución de clases, ratio]
-
-### Valores Faltantes
-[A COMPLETAR: Porcentaje y estrategia de manejo]
-
-### Outliers
-[A COMPLETAR: Detección y manejo]
-
----
-
-## .gitignore
-
-Los datos crudos (*.csv, *.parquet, *.pkl) NO se suben al repositorio (ver `.gitignore`).
-
-**Razones:**
-- Archivos muy pesados
-- Privacidad (si datos sensibles)
-- Facilita reproducibilidad (descargar datos es procedimiento estándar)
-
-**Si necesitas compartir datos:**
-- Usar GitHub LFS (Large File Storage)
-- Compartir enlace de descarga en este archivo
-- Usar cloud storage (Google Drive, Dropbox)
-
----
-
-## Reproducibilidad
-
-Para garantizar reproducibilidad:
-1. ✅ Documentar fuente de datos
-2. ✅ Documentar pasos de descarga
-3. ✅ Fijar random seeds
-4. ✅ Usar versiones específicas de librerías (`requirements.txt`)
-
-**Ver:** `notebooks/01_exploracion.ipynb` para verificación de datos
-
----
-
-## Contacto
-
-Si tienes dudas sobre los datos:
-- Jordani Mejía Quirós
-- Luis Fernando Solano Coto
-
----
-
-**Última actualización:** 26/09/2026 
-**Estado:** A completar durante proyecto
+La competencia contiene segmentos EEG y etiquetas con desacuerdo entre especialistas. Por ello se conserva la distribucion de votos, se agrupa la validacion por paciente y se reserva el holdout interno para una unica evaluacion final, una vez congelado el pipeline.
