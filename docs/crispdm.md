@@ -11,7 +11,7 @@ El proyecto avanza en **dos iteraciones de CRISP-DM que son dos acercamientos in
 | **1** | CNN pequeña entrenada desde cero (64 × 64, una banda), holdout de pacientes, fold 1 | Fases 1–6 de este documento · `notebooks/01`–`04` · `src/hms_cnn.py` |
 | **2** | CNNs preentrenadas en ImageNet, EEG crudo + espectrogramas, validación cruzada de 5 folds | Sección [Iteración 2](#iteración-2-cnns-preentrenadas-y-validación-cruzada-completa) · `notebooks/iteracion_2/` · `docs/informe_resultados.md` |
 
-**Última actualización:** 2026-11-11
+**Última actualización:** 2026-11-12
 
 ---
 
@@ -283,12 +283,10 @@ Para la corrida completa del fold 1, el notebook 04 genera la matriz de confusi�
 
 ## Declaración de Uso de IA Generativa
 
-[Si se utilizó GPT/Claude para documentación o debugging, documentar aquí]
-
-- **Herramienta usada**: [ej. Claude Haiku 4.5]
-- **Contexto de uso**: [ej. Generación de estructura CRISP-DM, debugging de XGBoost]
-- **Tipo de apoyo**: [ej. Template generado, revisión de código]
-- **Verificación**: [ej. El equipo adaptó y validó manualmente todos los outputs]
+- **Herramienta usada**: Claude (Anthropic).
+- **Contexto de uso**: apoyo para desarrollar y mejorar iterativamente el código de los notebooks, siguiendo las instrucciones de los autores y partiendo de los conocimientos y decisiones de los autores.
+- **Tipo de apoyo**: desarrollo de notebooks de Jupyter y de sus bloques de código.
+- **Verificación**: los autores revisaron y validaron el código y los resultados; las decisiones metodológicas y las solicitudes de mejora fueron de los autores.
 
 ## Protocolo para evitar leakage y snooping
 
