@@ -172,3 +172,76 @@ python tools/py2nb.py notebooks/iteracion_2/_py/03_modelado.py notebooks/iteraci
 python tools/py2nb.py notebooks/iteracion_2/_py/04_evaluacion.py notebooks/iteracion_2/04_evaluacion.ipynb
 python -m src.predict --models cv_effb0:efficientnet_b0.ra_in1k cv_convnext_t:convnext_tiny.fb_in22k_ft_in1k
 ```
+
+## 9. Ciclo 2.2: optimización bayesiana, entrenamiento en alta calidad y auditoría de desbalance
+
+Detalle completo en [05_optimizacion_alta_calidad](../notebooks/iteracion_2/05_optimizacion_alta_calidad.ipynb).
+
+**Auditoría de desbalance.** La accuracy y la KL simple están infladas por *Other* (42 % de los EEG): en el
+ensamble del ciclo 2.1 la accuracy cae de 0.717 a 0.599 balanceada, la KL sube de 0.576 a 0.732 macro y el modelo
+predice *Other* en el 55 % de los casos (real 42 %). Aun así no es trivial: kappa 0.60, AUC 0.92, accuracy
+balanceada 3.6× la del predictor trivial. Desde este ciclo se optimiza la **KL macro** (cada clase pesa igual).
+
+**Protocolo.** Entrenamiento solo con EEG ≥10 votos; los EEG <10 votos son solo test. Se mantienen los folds por
+paciente (el 77 % de los EEG de pocos votos son de pacientes que también tienen EEG de alta calidad). Optuna/TPE
+con poda: 30 intentos para EfficientNet-B0, 20 para ConvNeXt-T, sobre el fold 0; ensamble (peso, tipo de
+promedio, temperatura) optimizado de forma anidada.
+
+**Optimización:** KL macro en el fold 0 de 0.491 → 0.420 (B0) y 0.520 → 0.478 (ConvNeXt-T). El hiperparámetro más
+influyente en ambos fue el tamaño de las máscaras de aumento.
+
+| Validación ≥10 votos (5 folds) | KL | KL macro | Acc. balanceada | AUC |
+|---|---|---|---|---|
+| Ensamble del ciclo 2.1 (todos los votos) | 0.347 | 0.423 | **0.584** | **0.928** |
+| EfficientNet-B0 optimizado (solo ≥10) | 0.347 | 0.443 | 0.547 | 0.919 |
+| ConvNeXt-T optimizado (solo ≥10) | 0.386 | 0.475 | 0.545 | 0.906 |
+| **Ensamble optimizado (solo ≥10)** | **0.342** | **0.413** | 0.549 | 0.922 |
+
+| Test <10 votos | KL | KL macro | Acc. balanceada | AUC |
+|---|---|---|---|---|
+| Ensamble del ciclo 2.1 | **0.681** | **0.830** | **0.606** | **0.925** |
+| Ensamble optimizado solo ≥10 | 0.867 | 0.950 | 0.540 | 0.900 |
+| … con el prior real del test (oráculo) | 0.775 | 0.915 | 0.546 | 0.902 |
+
+**Hipótesis "los EEG de pocos votos no aportan al entrenamiento": se sostiene solo en parte.**
+- A favor: sin ellos y con optimización, la KL sobre alta calidad no empeora (0.342 vs. 0.347) y mejoran GPD/LPD.
+  La corrección de prior (EM, BBSE) falla en el test, lo que indica que en esos EEG cada clase se ve distinta
+  (cambio condicional), no solo en otra proporción.
+- En contra: el **93.5 % de los EEG de Seizure tienen <10 votos**. Sin ellos el recall de *Seizure* en alta calidad
+  cae de 0.62 a 0.45 y el de GRDA de 0.46 a 0.36; empeoran la accuracy balanceada y la AUC.
+- El ciclo 2.1 no estaba optimizado, así que falta la comparación con la misma optimización entrenando con todos los
+  votos. Recomendación: ponderar los EEG por número de votos y optimizar ese peso, en lugar de descartarlos.
+
+
+## 10. Ciclo 2.3: aprender de EEG de muchos y de pocos votos
+
+**Pregunta.** ¿Representan los EEG de ≥10 y de <10 votos las clases de forma distinta? Y si es así, ¿conviene un solo
+modelo o dos especialistas con una regla para elegir cuál usar? Detalle en `notebooks/iteracion_2/06_alta_y_baja_calidad.ipynb`;
+código en `src/mixed.py`, `src/routing.py` y `run_mixed.sh`.
+
+**Diseño.** Mismos 5 folds por paciente. Objetivo de optimización "general" = promedio de la KL macro en alta y en
+baja calidad. Pesos de ensamble, umbrales y compuertas se ajustan siempre en los otros folds (anidado).
+
+| Estrategia | General | KL macro ≥10 | KL macro <10 | KL (todas) | AUC |
+|---|---|---|---|---|---|
+| Ciclo 2.1: ensamble (todos, 2 etapas) | 0.626 | 0.423 | 0.830 | 0.576 | 0.924 |
+| Ciclo 2.2: solo ≥10 votos (= especialista H) | 0.682 | 0.413 | 0.950 | 0.701 | 0.902 |
+| Especialista L (solo <10 votos) | 0.639 | 0.496 | 0.782 | 0.615 | 0.914 |
+| Cascada H → L por confianza | 0.643 | 0.496 | 0.791 | 0.620 | 0.912 |
+| Compuerta aprendida + mezcla suave de H y L | 0.594 | 0.422 | 0.767 | 0.579 | 0.922 |
+| Oráculo H/L (conoce los votos, no desplegable) | 0.597 | 0.413 | 0.782 | 0.569 | 0.921 |
+| A: modelo único, `lq_weight` optimizado (ensamble) | 0.584 | **0.388** | 0.780 | 0.569 | 0.922 |
+| **A': dos cabezas + compuerta (ensamble)** | **0.577** | 0.399 | **0.755** | **0.567** | 0.923 |
+
+**Conclusiones.**
+- Los grupos son distintos: cada especialista rinde mejor en su propio grupo. Fuera de su dominio, los errores
+  con confianza ≥0.8 de H pasan de 2.6 % a 13.3 %.
+- Aun así, un solo modelo que aprende de ambos (A o A') iguala o supera a cada especialista en su propio terreno.
+  Separar los modelos no aporta.
+- La cascada por confianza falla: envía ~95 % de los casos a un solo especialista. La confianza no revela a qué grupo
+  pertenece un caso.
+- Un caso nuevo solo se reconoce débilmente como "de pocos votos" (AUC de la compuerta 0.63–0.65). Aun así, el modelo de
+  dos cabezas queda a 0.010 de su oráculo.
+- El modelo A' tiene el mayor recall mínimo por clase. Además, *Seizure* sube a 0.65 / 0.70 (ciclo 2.2: 0.45 / 0.33) y el sesgo
+  hacia *Other* desaparece.
+- Límites: optimización solo en el fold 0; pocos intentos en ConvNeXt-T; el especialista L ConvNeXt-T no se optimizó.

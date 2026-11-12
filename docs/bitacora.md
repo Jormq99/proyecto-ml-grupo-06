@@ -49,6 +49,25 @@ No se realizaron avances significativos en esta semana
 **Última actualización:** 2026-08-01
 
 
+## 07 de noviembre de 2026: Iteración 2, preparación de datos (Luis Fernando Solano)
+
+Inicio de un segundo acercamiento, independiente de la Iteración 1: CNNs preentrenadas sobre EEG crudo y espectrogramas, con validación cruzada de 5 folds por paciente.
+
+### Trabajo realizado
+- Descarga del dataset fuera del repositorio y documentación en `data/README.md`.
+- EDA del EEG crudo y de los espectrogramas (`notebooks/iteracion_2/01_exploracion`):
+  - dos poblaciones según el número de votos (<10 y ≥10);
+  - sub-ventanas casi duplicadas (89 % de los EEG repiten el patrón de votos);
+  - pacientes casi monoclase y artefactos de señal.
+- Preparación (`src/`):
+  - una muestra por `eeg_id` y 5 folds por paciente;
+  - filtrado y montaje bipolar;
+  - imágenes de 8 espectrogramas por muestra y caché de imágenes y features.
+- Baselines clásicos y comparación de 8 CNNs en el fold 0. El mejor baseline (gradient boosting) obtuvo KL 0.882.
+
+### Horas registradas
+- 4 h 07 de nov
+
 ## 08 de noviembre de 2026 — Primera prueba de una CNN
 
 ### Trabajo realizado
@@ -71,6 +90,33 @@ No se realizaron avances significativos en esta semana
 ### Horas registradas
 - 5 h 08 de nov
 
+## 08 de noviembre de 2026: Iteración 2, ciclos 2.1 y 2.2
+
+### Trabajo realizado
+- **Ciclo 2.1:** validación cruzada de 5 folds de EfficientNet-B0 y ConvNeXt-T, ensamble y evaluación por clase (`notebooks/iteracion_2/03`–`04`). El ensamble obtuvo KL **0.576**, Macro F1 **0.633** y AUC **0.924**.
+- **Ciclo 2.2:**
+  - Auditoría de desbalance: la accuracy y la KL simple están infladas por *Other*, así que desde aquí se optimiza la KL macro.
+  - Optimización con Optuna y entrenamiento solo con EEG de ≥10 votos (`notebooks/iteracion_2/05`). Mejora la alta calidad (KL 0.342), pero empeoran *Seizure* y los EEG de <10 votos.
+
+### Horas registradas
+- 4 h 08 de nov (madrugada: CV y evaluación)
+- 5 h 08 de nov (tarde: Optuna y alta calidad)
+
+## 09 de noviembre de 2026: Iteración 2, ciclo 2.3
+
+### Trabajo realizado
+- Comparación de un modelo único con `lq_weight` optimizado, un modelo de dos cabezas con compuerta y especialistas de alta y baja calidad con cascada, compuerta y mezcla (`src/mixed.py`, `src/routing.py`, `notebooks/iteracion_2/06`).
+- Mejor modelo: ensamble de dos cabezas, con KL **0.567** y KL macro 0.399 en alta y 0.755 en baja calidad. La cascada por confianza falla: envía ~95 % de los casos a un solo especialista.
+
+### Interpretación y límites
+- La Iteración 2 usa su propia partición de 5 folds sobre todos los pacientes, sin holdout aparte. Sus cifras no son directamente comparables con las de la Iteración 1.
+- La optimización de hiperparámetros se hizo solo en el fold 0 y con una semilla por experimento.
+
+### Horas registradas
+- 5 h 09 de nov (madrugada: modelos de EfficientNet-B0)
+- 5 h 09 de nov (mañana: modelos de ConvNeXt-T y enrutamiento)
+- 1 h 09 de nov (tarde: notebook 06)
+
 ## 10 de noviembre de 2026 — Corrida completa inicial en desarrollo
 
 ### Trabajo realizado y resultados
@@ -87,3 +133,14 @@ No se realizaron avances significativos en esta semana
 
 ### Horas registradas
 - 3 h 10 de nov
+
+## 11 de noviembre de 2026: Integración de la Iteración 2 al repositorio
+
+### Trabajo realizado
+- Integración del trabajo local sobre los cambios de la Iteración 1 sin modificar sus archivos. Los notebooks de la Iteración 2 quedan en `notebooks/iteracion_2/`.
+- Documentación en `docs/crispdm.md`, `docs/informe_resultados.md` y `README.md`. La subida se hace en tres PR, uno por bloque.
+
+### Horas registradas
+- 2 h 11 de nov
+
+Las horas de la Iteración 2 se estimaron a partir de las marcas de tiempo de los logs y resultados de ejecución. Incluyen corridas de GPU sin supervisión continua.
