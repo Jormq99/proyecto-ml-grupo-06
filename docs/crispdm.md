@@ -4,6 +4,13 @@
 
 Este documento registra el progreso del proyecto a través de las **6 fases de la metodología CRISP-DM**. Se actualiza continuamente durante el desarrollo, no solo al final.
 
+El proyecto avanza en **dos iteraciones de CRISP-DM que son dos acercamientos independientes** al mismo problema. Cada una recorre todas las fases con su propio código, partición y protocolo de validación, y conviven en el repositorio sin modificarse entre sí. La segunda toma como punto de partida las conclusiones de la primera, no su código.
+
+| Iteración | Contenido | Dónde |
+|---|---|---|
+| **1** | CNN pequeña entrenada desde cero (64 × 64, una banda), holdout de pacientes, fold 1 | Fases 1–6 de este documento · `notebooks/01`–`04` · `src/hms_cnn.py` |
+| **2** | CNNs preentrenadas en ImageNet, EEG crudo + espectrogramas, validación cruzada de 5 folds | Sección [Iteración 2](#iteración-2-cnns-preentrenadas-y-validación-cruzada-completa) · `notebooks/iteracion_2/` · `docs/informe_resultados.md` |
+
 **Última actualización:** 2026-11-10
 
 ---
@@ -295,6 +302,44 @@ Se adaptan buenas prácticas vistas en TP1, TP2 y TP3 al tipo de datos HMS:
 6. **Respetar el objetivo temporal del problema.** Este proyecto clasifica una ventana EEG ya observada; no pronostica el siguiente instante, por lo que las ventanas se extraen del segmento etiquetado. Si se construye un sistema de pronóstico futuro, se deberán usar solo ventanas anteriores al instante de predicción, como se practica en TP2.
 
 La referencia de división aleatoria estratificada de TP3 es útil cuando cada fila es independiente. En HMS se prioriza el paciente como grupo porque varios segmentos pueden proceder de la misma persona; conservar el grupo es más importante que repartir filas al azar.
+
+
+---
+
+# Iteración 2: CNNs preentrenadas y validación cruzada completa
+
+**Estado:** 🔄 Abierta (inicio 7 de noviembre de 2026) · **Responsable:** Luis Fernando Solano
+
+## 2.0 Por qué una segunda iteración
+
+La Iteración 1 dejó funcionando el flujo de datos y el protocolo contra la fuga de información. También dejó claros sus límites:
+
+- Macro F1 de 0.384 en un solo fold, con una CNN pequeña entrenada desde cero sobre espectrogramas de 64 × 64 y una banda.
+- Sobreajuste visible en la tercera época y entrenamiento en CPU.
+- La hipótesis H2 ("una CNN preentrenada supera a la entrenada desde cero") quedó pendiente por falta de `torchvision` y de GPU.
+
+La Iteración 2 es un segundo acercamiento: un pipeline nuevo, en `src/` (módulos distintos de `hms_cnn.py`) y `notebooks/iteracion_2/`, con GPU (RTX 4070 Ti SUPER, 16 GB). Recorre de nuevo las fases 1 a 5 para responder lo que quedó pendiente. No modifica los notebooks, el módulo ni los resultados de la Iteración 1.
+
+## 2.1 Comprensión del negocio (reformulada)
+
+- **Métrica principal: divergencia KL** entre la distribución de votos y la predicha. Es la métrica oficial de la competencia y respeta que el objetivo sea una distribución, no una etiqueta. Se siguen reportando Macro F1, accuracy, AUC y sensibilidad y especificidad por clase, para poder comparar con la Iteración 1.
+- **Preguntas:**
+  1. H2: ¿supera una CNN preentrenada a la misma arquitectura sin preentrenar?
+  2. ¿Aporta el EEG crudo (convertido a espectrograma) información además de los espectrogramas de Kaggle?
+  3. ¿Los EEG con pocos votos (< 10) ayudan o perjudican al entrenamiento?
+
+## 2.2 Plan por ciclos
+
+| Ciclo | Objetivo | Fases |
+|---|---|---|
+| 2.1 | EDA ampliado, preparación de imágenes de 512 × 512, baselines clásicos, comparación de 8 CNNs en el fold 0 y validación cruzada de 5 folds del mejor ensamble | 2, 3, 4, 5 |
+| 2.2 | Auditoría de desbalance (KL macro), optimización bayesiana con Optuna y entrenamiento solo con EEG de alta calidad (≥ 10 votos) | 4, 5 |
+| 2.3 | Un solo modelo frente a dos especialistas (alta y baja calidad) con reglas para elegir cuál usar | 4, 5 |
+
+## 2.3 Cambios de protocolo respecto a la Iteración 1
+
+- **Una muestra por `eeg_id`** (la sub-ventana central): el 89 % de los EEG repiten el mismo patrón de votos en sub-ventanas que se solapan.
+- **Partición propia e independiente:** `StratifiedGroupKFold` de 5 folds agrupados por paciente (semilla 42) sobre los 1 950 pacientes de `train.csv`. La validación se hace con las predicciones fuera de fold de los 5 folds, sin holdout aparte. El holdout de pacientes pertenece al protocolo de la Iteración 1 y no se usa aquí. Por eso las cifras de las dos iteraciones se comparan como acercamientos distintos y no como el mismo experimento.
 
 ---
 
