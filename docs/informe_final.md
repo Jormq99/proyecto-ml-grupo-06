@@ -638,8 +638,9 @@ Todas disponibles en `results/figures/`:
 
 ### D. Declaración de Uso de IA Generativa
 
-**Herramientas utilizadas:** Claude (Anthropic), mediante Claude Code, en la Iteración 2 y en la integración del repositorio. [Jordani: indicar si se usó IA en la Iteración 1 y con qué herramienta.]
+**Herramientas utilizadas:** Claude (Anthropic), mediante Claude Code, en la Iteración 2 y en la integración del repositorio. También se utilizó Claude en la Iteración 1.
 **Contexto de uso:**
+- Apoyo para desarrollar y mejorar iterativamente el código de los notebooks de la Iteración 1, siguiendo las instrucciones de los autores y partiendo de los conocimientos y decisiones de los autores.
 - Programación de los módulos de la Iteración 2 (`src/`), de los scripts de experimentos y de los notebooks de `notebooks/iteracion_2/`.
 - Depuración y ejecución de los entrenamientos en GPU y de la optimización con Optuna.
 
@@ -674,9 +675,9 @@ Todas disponibles en `results/figures/`:
 
 | Rol | Nombre | Firma | Fecha |
 |-----|--------|-------|-------|
-| Autor 1 | Jordani Mejía Quirós | _____ | 2026-[MES]-[DÍA] |
-| Autor 2 | Luis Fernando Solano Coto | _____ | 2026-[MES]-[DÍA] |
-| Profesor | [Nombre Profesor] | _____ | 2026-[MES]-[DÍA] |
+| Autor 1 | Jordani Mejía Quirós | Pendiente | Pendiente |
+| Autor 2 | Luis Fernando Solano Coto | Pendiente | Pendiente |
+| Profesor | Luis Alexander Calvo Valverde | Pendiente | Pendiente |
 
 ---
 
