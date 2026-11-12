@@ -211,3 +211,37 @@ influyente en ambos fue el tamaño de las máscaras de aumento.
   cae de 0.62 a 0.45 y el de GRDA de 0.46 a 0.36; empeoran la accuracy balanceada y la AUC.
 - El ciclo 2.1 no estaba optimizado, así que falta la comparación con la misma optimización entrenando con todos los
   votos. Recomendación: ponderar los EEG por número de votos y optimizar ese peso, en lugar de descartarlos.
+
+
+## 10. Ciclo 2.3: aprender de EEG de muchos y de pocos votos
+
+**Pregunta.** ¿Representan los EEG de ≥10 y de <10 votos las clases de forma distinta? Y si es así, ¿conviene un solo
+modelo o dos especialistas con una regla para elegir cuál usar? Detalle en `notebooks/iteracion_2/06_alta_y_baja_calidad.ipynb`;
+código en `src/mixed.py`, `src/routing.py` y `run_mixed.sh`.
+
+**Diseño.** Mismos 5 folds por paciente. Objetivo de optimización "general" = promedio de la KL macro en alta y en
+baja calidad. Pesos de ensamble, umbrales y compuertas se ajustan siempre en los otros folds (anidado).
+
+| Estrategia | General | KL macro ≥10 | KL macro <10 | KL (todas) | AUC |
+|---|---|---|---|---|---|
+| Ciclo 2.1: ensamble (todos, 2 etapas) | 0.626 | 0.423 | 0.830 | 0.576 | 0.924 |
+| Ciclo 2.2: solo ≥10 votos (= especialista H) | 0.682 | 0.413 | 0.950 | 0.701 | 0.902 |
+| Especialista L (solo <10 votos) | 0.639 | 0.496 | 0.782 | 0.615 | 0.914 |
+| Cascada H → L por confianza | 0.643 | 0.496 | 0.791 | 0.620 | 0.912 |
+| Compuerta aprendida + mezcla suave de H y L | 0.594 | 0.422 | 0.767 | 0.579 | 0.922 |
+| Oráculo H/L (conoce los votos, no desplegable) | 0.597 | 0.413 | 0.782 | 0.569 | 0.921 |
+| A: modelo único, `lq_weight` optimizado (ensamble) | 0.584 | **0.388** | 0.780 | 0.569 | 0.922 |
+| **A': dos cabezas + compuerta (ensamble)** | **0.577** | 0.399 | **0.755** | **0.567** | 0.923 |
+
+**Conclusiones.**
+- Los grupos son distintos: cada especialista rinde mejor en su propio grupo. Fuera de su dominio, los errores
+  con confianza ≥0.8 de H pasan de 2.6 % a 13.3 %.
+- Aun así, un solo modelo que aprende de ambos (A o A') iguala o supera a cada especialista en su propio terreno.
+  Separar los modelos no aporta.
+- La cascada por confianza falla: envía ~95 % de los casos a un solo especialista. La confianza no revela a qué grupo
+  pertenece un caso.
+- Un caso nuevo solo se reconoce débilmente como "de pocos votos" (AUC de la compuerta 0.63–0.65). Aun así, el modelo de
+  dos cabezas queda a 0.010 de su oráculo.
+- El modelo A' tiene el mayor recall mínimo por clase. Además, *Seizure* sube a 0.65 / 0.70 (ciclo 2.2: 0.45 / 0.33) y el sesgo
+  hacia *Other* desaparece.
+- Límites: optimización solo en el fold 0; pocos intentos en ConvNeXt-T; el especialista L ConvNeXt-T no se optimizó.

@@ -1,0 +1,217 @@
+estrategia,subconjunto,clase,n,recall
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",alta,Seizure,182,0.6208791208791209
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",alta,LPD,1031,0.6595538312318138
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",alta,GPD,692,0.6921965317919075
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",alta,LRDA,250,0.204
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",alta,GRDA,386,0.4585492227979275
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",alta,Other,2855,0.8686514886164624
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",baja,Seizure,2618,0.6317799847211611
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",baja,LPD,1542,0.6342412451361867
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",baja,GPD,1107,0.7353206865401988
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",baja,LRDA,684,0.20029239766081872
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",baja,GRDA,1442,0.5124826629680999
+"Fase 1: ensamble 50/50 (todos, 2 etapas)",baja,Other,4300,0.92
+Iter. 2: solo alta calidad (ensamble),alta,Seizure,182,0.45054945054945056
+Iter. 2: solo alta calidad (ensamble),alta,LPD,1031,0.6954413191076625
+Iter. 2: solo alta calidad (ensamble),alta,GPD,692,0.7413294797687862
+Iter. 2: solo alta calidad (ensamble),alta,LRDA,250,0.168
+Iter. 2: solo alta calidad (ensamble),alta,GRDA,386,0.35751295336787564
+Iter. 2: solo alta calidad (ensamble),alta,Other,2855,0.8795096322241681
+Iter. 2: solo alta calidad (ensamble),baja,Seizure,2618,0.32620320855614976
+Iter. 2: solo alta calidad (ensamble),baja,LPD,1542,0.6776913099870299
+Iter. 2: solo alta calidad (ensamble),baja,GPD,1107,0.7244805781391147
+Iter. 2: solo alta calidad (ensamble),baja,LRDA,684,0.20614035087719298
+Iter. 2: solo alta calidad (ensamble),baja,GRDA,1442,0.36754507628294036
+Iter. 2: solo alta calidad (ensamble),baja,Other,4300,0.9393023255813954
+A: único B0,alta,Seizure,182,0.554945054945055
+A: único B0,alta,LPD,1031,0.6983511154219205
+A: único B0,alta,GPD,692,0.7485549132947977
+A: único B0,alta,LRDA,250,0.236
+A: único B0,alta,GRDA,386,0.38860103626943004
+A: único B0,alta,Other,2855,0.8388791593695272
+A: único B0,baja,Seizure,2618,0.5446906035141329
+A: único B0,baja,LPD,1542,0.6640726329442282
+A: único B0,baja,GPD,1107,0.7588075880758808
+A: único B0,baja,LRDA,684,0.23391812865497075
+A: único B0,baja,GRDA,1442,0.48335644937586686
+A: único B0,baja,Other,4300,0.9065116279069767
+A: único ConvNeXt-T,alta,Seizure,182,0.6813186813186813
+A: único ConvNeXt-T,alta,LPD,1031,0.6896217264791464
+A: único ConvNeXt-T,alta,GPD,692,0.7210982658959537
+A: único ConvNeXt-T,alta,LRDA,250,0.3
+A: único ConvNeXt-T,alta,GRDA,386,0.5051813471502591
+A: único ConvNeXt-T,alta,Other,2855,0.7562171628721541
+A: único ConvNeXt-T,baja,Seizure,2618,0.6894576012223071
+A: único ConvNeXt-T,baja,LPD,1542,0.6913099870298314
+A: único ConvNeXt-T,baja,GPD,1107,0.7425474254742548
+A: único ConvNeXt-T,baja,LRDA,684,0.31871345029239767
+A: único ConvNeXt-T,baja,GRDA,1442,0.5970873786407767
+A: único ConvNeXt-T,baja,Other,4300,0.8374418604651163
+"A: único, ensamble optimizado",alta,Seizure,182,0.6483516483516484
+"A: único, ensamble optimizado",alta,LPD,1031,0.7061105722599418
+"A: único, ensamble optimizado",alta,GPD,692,0.7413294797687862
+"A: único, ensamble optimizado",alta,LRDA,250,0.264
+"A: único, ensamble optimizado",alta,GRDA,386,0.47668393782383417
+"A: único, ensamble optimizado",alta,Other,2855,0.8119089316987741
+"A: único, ensamble optimizado",baja,Seizure,2618,0.6470588235294118
+"A: único, ensamble optimizado",baja,LPD,1542,0.6802853437094682
+"A: único, ensamble optimizado",baja,GPD,1107,0.7551942186088527
+"A: único, ensamble optimizado",baja,LRDA,684,0.2675438596491228
+"A: único, ensamble optimizado",baja,GRDA,1442,0.5679611650485437
+"A: único, ensamble optimizado",baja,Other,4300,0.8865116279069768
+A': dos cabezas B0 (compuerta interna),alta,Seizure,182,0.6208791208791209
+A': dos cabezas B0 (compuerta interna),alta,LPD,1031,0.7061105722599418
+A': dos cabezas B0 (compuerta interna),alta,GPD,692,0.773121387283237
+A': dos cabezas B0 (compuerta interna),alta,LRDA,250,0.3
+A': dos cabezas B0 (compuerta interna),alta,GRDA,386,0.5259067357512953
+A': dos cabezas B0 (compuerta interna),alta,Other,2855,0.7667250437828371
+A': dos cabezas B0 (compuerta interna),baja,Seizure,2618,0.6646294881588999
+A': dos cabezas B0 (compuerta interna),baja,LPD,1542,0.6543450064850843
+A': dos cabezas B0 (compuerta interna),baja,GPD,1107,0.7588075880758808
+A': dos cabezas B0 (compuerta interna),baja,LRDA,684,0.29239766081871343
+A': dos cabezas B0 (compuerta interna),baja,GRDA,1442,0.5776699029126213
+A': dos cabezas B0 (compuerta interna),baja,Other,4300,0.8546511627906976
+A': dos cabezas ConvNeXt-T,alta,Seizure,182,0.6703296703296703
+A': dos cabezas ConvNeXt-T,alta,LPD,1031,0.6876818622696411
+A': dos cabezas ConvNeXt-T,alta,GPD,692,0.7572254335260116
+A': dos cabezas ConvNeXt-T,alta,LRDA,250,0.304
+A': dos cabezas ConvNeXt-T,alta,GRDA,386,0.582901554404145
+A': dos cabezas ConvNeXt-T,alta,Other,2855,0.7218914185639229
+A': dos cabezas ConvNeXt-T,baja,Seizure,2618,0.7307104660045837
+A': dos cabezas ConvNeXt-T,baja,LPD,1542,0.6673151750972762
+A': dos cabezas ConvNeXt-T,baja,GPD,1107,0.7588075880758808
+A': dos cabezas ConvNeXt-T,baja,LRDA,684,0.33187134502923976
+A': dos cabezas ConvNeXt-T,baja,GRDA,1442,0.6414701803051318
+A': dos cabezas ConvNeXt-T,baja,Other,4300,0.8109302325581396
+"A': dos cabezas, ensamble (compuerta interna)",alta,Seizure,182,0.6483516483516484
+"A': dos cabezas, ensamble (compuerta interna)",alta,LPD,1031,0.7032007759456838
+"A': dos cabezas, ensamble (compuerta interna)",alta,GPD,692,0.7774566473988439
+"A': dos cabezas, ensamble (compuerta interna)",alta,LRDA,250,0.312
+"A': dos cabezas, ensamble (compuerta interna)",alta,GRDA,386,0.5440414507772021
+"A': dos cabezas, ensamble (compuerta interna)",alta,Other,2855,0.7646234676007005
+"A': dos cabezas, ensamble (compuerta interna)",baja,Seizure,2618,0.7032085561497327
+"A': dos cabezas, ensamble (compuerta interna)",baja,LPD,1542,0.6731517509727627
+"A': dos cabezas, ensamble (compuerta interna)",baja,GPD,1107,0.7750677506775068
+"A': dos cabezas, ensamble (compuerta interna)",baja,LRDA,684,0.29239766081871343
+"A': dos cabezas, ensamble (compuerta interna)",baja,GRDA,1442,0.6352288488210819
+"A': dos cabezas, ensamble (compuerta interna)",baja,Other,4300,0.8455813953488373
+"A': dos cabezas, cabeza según votos reales (oráculo)",alta,Seizure,182,0.4835164835164835
+"A': dos cabezas, cabeza según votos reales (oráculo)",alta,LPD,1031,0.7129000969932104
+"A': dos cabezas, cabeza según votos reales (oráculo)",alta,GPD,692,0.7716763005780347
+"A': dos cabezas, cabeza según votos reales (oráculo)",alta,LRDA,250,0.24
+"A': dos cabezas, cabeza según votos reales (oráculo)",alta,GRDA,386,0.38341968911917096
+"A': dos cabezas, cabeza según votos reales (oráculo)",alta,Other,2855,0.8718038528896672
+"A': dos cabezas, cabeza según votos reales (oráculo)",baja,Seizure,2618,0.7616501145912911
+"A': dos cabezas, cabeza según votos reales (oráculo)",baja,LPD,1542,0.6647211413748378
+"A': dos cabezas, cabeza según votos reales (oráculo)",baja,GPD,1107,0.7741644083107497
+"A': dos cabezas, cabeza según votos reales (oráculo)",baja,LRDA,684,0.3260233918128655
+"A': dos cabezas, cabeza según votos reales (oráculo)",baja,GRDA,1442,0.6740638002773925
+"A': dos cabezas, cabeza según votos reales (oráculo)",baja,Other,4300,0.8027906976744186
+B: solo especialista L (baja),alta,Seizure,182,0.7252747252747253
+B: solo especialista L (baja),alta,LPD,1031,0.6411251212415131
+B: solo especialista L (baja),alta,GPD,692,0.7008670520231214
+B: solo especialista L (baja),alta,LRDA,250,0.3
+B: solo especialista L (baja),alta,GRDA,386,0.6321243523316062
+B: solo especialista L (baja),alta,Other,2855,0.6879159369527146
+B: solo especialista L (baja),baja,Seizure,2618,0.7704354469060352
+B: solo especialista L (baja),baja,LPD,1542,0.6809338521400778
+B: solo especialista L (baja),baja,GPD,1107,0.6991869918699187
+B: solo especialista L (baja),baja,LRDA,684,0.2777777777777778
+B: solo especialista L (baja),baja,GRDA,1442,0.651872399445215
+B: solo especialista L (baja),baja,Other,4300,0.806046511627907
+"B: oráculo (H si >=10 votos, L si <10)",alta,Seizure,182,0.45054945054945056
+"B: oráculo (H si >=10 votos, L si <10)",alta,LPD,1031,0.6954413191076625
+"B: oráculo (H si >=10 votos, L si <10)",alta,GPD,692,0.7413294797687862
+"B: oráculo (H si >=10 votos, L si <10)",alta,LRDA,250,0.168
+"B: oráculo (H si >=10 votos, L si <10)",alta,GRDA,386,0.35751295336787564
+"B: oráculo (H si >=10 votos, L si <10)",alta,Other,2855,0.8795096322241681
+"B: oráculo (H si >=10 votos, L si <10)",baja,Seizure,2618,0.7704354469060352
+"B: oráculo (H si >=10 votos, L si <10)",baja,LPD,1542,0.6809338521400778
+"B: oráculo (H si >=10 votos, L si <10)",baja,GPD,1107,0.6991869918699187
+"B: oráculo (H si >=10 votos, L si <10)",baja,LRDA,684,0.2777777777777778
+"B: oráculo (H si >=10 votos, L si <10)",baja,GRDA,1442,0.651872399445215
+"B: oráculo (H si >=10 votos, L si <10)",baja,Other,4300,0.806046511627907
+B: mezcla fija H+L,alta,Seizure,182,0.6758241758241759
+B: mezcla fija H+L,alta,LPD,1031,0.6808923375363725
+B: mezcla fija H+L,alta,GPD,692,0.75
+B: mezcla fija H+L,alta,LRDA,250,0.284
+B: mezcla fija H+L,alta,GRDA,386,0.5699481865284974
+B: mezcla fija H+L,alta,Other,2855,0.7810858143607706
+B: mezcla fija H+L,baja,Seizure,2618,0.6573720397249809
+B: mezcla fija H+L,baja,LPD,1542,0.682230869001297
+B: mezcla fija H+L,baja,GPD,1107,0.7398373983739838
+B: mezcla fija H+L,baja,LRDA,684,0.24561403508771928
+B: mezcla fija H+L,baja,GRDA,1442,0.5922330097087378
+B: mezcla fija H+L,baja,Other,4300,0.8786046511627907
+B: cascada H -> L por confianza,alta,Seizure,182,0.7252747252747253
+B: cascada H -> L por confianza,alta,LPD,1031,0.6411251212415131
+B: cascada H -> L por confianza,alta,GPD,692,0.7008670520231214
+B: cascada H -> L por confianza,alta,LRDA,250,0.3
+B: cascada H -> L por confianza,alta,GRDA,386,0.6321243523316062
+B: cascada H -> L por confianza,alta,Other,2855,0.6924693520140105
+B: cascada H -> L por confianza,baja,Seizure,2618,0.7574484339190222
+B: cascada H -> L por confianza,baja,LPD,1542,0.6809338521400778
+B: cascada H -> L por confianza,baja,GPD,1107,0.6991869918699187
+B: cascada H -> L por confianza,baja,LRDA,684,0.2777777777777778
+B: cascada H -> L por confianza,baja,GRDA,1442,0.6490984743411928
+B: cascada H -> L por confianza,baja,Other,4300,0.8088372093023256
+B: cascada L -> H por confianza,alta,Seizure,182,0.7197802197802198
+B: cascada L -> H por confianza,alta,LPD,1031,0.6624636275460718
+B: cascada L -> H por confianza,alta,GPD,692,0.708092485549133
+B: cascada L -> H por confianza,alta,LRDA,250,0.288
+B: cascada L -> H por confianza,alta,GRDA,386,0.6010362694300518
+B: cascada L -> H por confianza,alta,Other,2855,0.7131348511383537
+B: cascada L -> H por confianza,baja,Seizure,2618,0.7616501145912911
+B: cascada L -> H por confianza,baja,LPD,1542,0.6848249027237354
+B: cascada L -> H por confianza,baja,GPD,1107,0.7018970189701897
+B: cascada L -> H por confianza,baja,LRDA,684,0.26169590643274854
+B: cascada L -> H por confianza,baja,GRDA,1442,0.6380027739251041
+B: cascada L -> H por confianza,baja,Other,4300,0.8204651162790698
+"B: compuerta aprendida, mezcla suave",alta,Seizure,182,0.6978021978021978
+"B: compuerta aprendida, mezcla suave",alta,LPD,1031,0.6867119301648884
+"B: compuerta aprendida, mezcla suave",alta,GPD,692,0.7239884393063584
+"B: compuerta aprendida, mezcla suave",alta,LRDA,250,0.276
+"B: compuerta aprendida, mezcla suave",alta,GRDA,386,0.5932642487046632
+"B: compuerta aprendida, mezcla suave",alta,Other,2855,0.7558669001751314
+"B: compuerta aprendida, mezcla suave",baja,Seizure,2618,0.7219251336898396
+"B: compuerta aprendida, mezcla suave",baja,LPD,1542,0.6867704280155642
+"B: compuerta aprendida, mezcla suave",baja,GPD,1107,0.7335140018066847
+"B: compuerta aprendida, mezcla suave",baja,LRDA,684,0.24707602339181287
+"B: compuerta aprendida, mezcla suave",baja,GRDA,1442,0.6081830790568654
+"B: compuerta aprendida, mezcla suave",baja,Other,4300,0.857906976744186
+"B: compuerta aprendida, enrutamiento duro",alta,Seizure,182,0.7252747252747253
+"B: compuerta aprendida, enrutamiento duro",alta,LPD,1031,0.6915615906886518
+"B: compuerta aprendida, enrutamiento duro",alta,GPD,692,0.6676300578034682
+"B: compuerta aprendida, enrutamiento duro",alta,LRDA,250,0.248
+"B: compuerta aprendida, enrutamiento duro",alta,GRDA,386,0.5362694300518135
+"B: compuerta aprendida, enrutamiento duro",alta,Other,2855,0.7478108581436077
+"B: compuerta aprendida, enrutamiento duro",baja,Seizure,2618,0.7635599694423224
+"B: compuerta aprendida, enrutamiento duro",baja,LPD,1542,0.6738002594033723
+"B: compuerta aprendida, enrutamiento duro",baja,GPD,1107,0.6973803071364046
+"B: compuerta aprendida, enrutamiento duro",baja,LRDA,684,0.23538011695906433
+"B: compuerta aprendida, enrutamiento duro",baja,GRDA,1442,0.6012482662968099
+"B: compuerta aprendida, enrutamiento duro",baja,Other,4300,0.8441860465116279
+"B: compuerta (H, L + CNN), mezcla suave",alta,Seizure,182,0.7032967032967034
+"B: compuerta (H, L + CNN), mezcla suave",alta,LPD,1031,0.6847720659553831
+"B: compuerta (H, L + CNN), mezcla suave",alta,GPD,692,0.7254335260115607
+"B: compuerta (H, L + CNN), mezcla suave",alta,LRDA,250,0.288
+"B: compuerta (H, L + CNN), mezcla suave",alta,GRDA,386,0.582901554404145
+"B: compuerta (H, L + CNN), mezcla suave",alta,Other,2855,0.7572679509632224
+"B: compuerta (H, L + CNN), mezcla suave",baja,Seizure,2618,0.7261268143621085
+"B: compuerta (H, L + CNN), mezcla suave",baja,LPD,1542,0.6861219195849546
+"B: compuerta (H, L + CNN), mezcla suave",baja,GPD,1107,0.7371273712737128
+"B: compuerta (H, L + CNN), mezcla suave",baja,LRDA,684,0.24707602339181287
+"B: compuerta (H, L + CNN), mezcla suave",baja,GRDA,1442,0.6095700416088765
+"B: compuerta (H, L + CNN), mezcla suave",baja,Other,4300,0.8567441860465116
+"B: compuerta (H, L + CNN), enrutamiento duro",alta,Seizure,182,0.6758241758241759
+"B: compuerta (H, L + CNN), enrutamiento duro",alta,LPD,1031,0.6857419980601358
+"B: compuerta (H, L + CNN), enrutamiento duro",alta,GPD,692,0.6835260115606936
+"B: compuerta (H, L + CNN), enrutamiento duro",alta,LRDA,250,0.24
+"B: compuerta (H, L + CNN), enrutamiento duro",alta,GRDA,386,0.4585492227979275
+"B: compuerta (H, L + CNN), enrutamiento duro",alta,Other,2855,0.7751313485113835
+"B: compuerta (H, L + CNN), enrutamiento duro",baja,Seizure,2618,0.747135217723453
+"B: compuerta (H, L + CNN), enrutamiento duro",baja,LPD,1542,0.6686121919584954
+"B: compuerta (H, L + CNN), enrutamiento duro",baja,GPD,1107,0.7055103884372177
+"B: compuerta (H, L + CNN), enrutamiento duro",baja,LRDA,684,0.22660818713450293
+"B: compuerta (H, L + CNN), enrutamiento duro",baja,GRDA,1442,0.5700416088765603
+"B: compuerta (H, L + CNN), enrutamiento duro",baja,Other,4300,0.8630232558139534
