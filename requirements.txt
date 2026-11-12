@@ -17,7 +17,9 @@ lightgbm>=3.2.0
 
 # Advanced Models (optional)
 tensorflow>=2.7.0  # Para modelos dinámicos (LSTM, GNN)
-torch>=1.10.0     # Alternativa a TensorFlow
+torch>=2.7        # Iteración 2 con GPU: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+torchvision
+timm>=1.0         # Backbones preentrenados (EfficientNet, ConvNeXt, RegNet, ResNet)
 torch-geometric>=2.0.0  # Para Graph Neural Networks
 
 # Explainability
@@ -29,9 +31,17 @@ python-dateutil>=2.8.2
 # Data Download
 kagglehub>=0.2.0
 
+# Optimización de hiperparámetros (Iteración 2)
+optuna>=3.0
+scipy
+tqdm
+
 # Utilities
 jupyter>=1.0.0
 ipython>=7.0.0
+ipykernel
+nbformat
+nbclient
 python-dotenv>=0.19.0
 
 # Development

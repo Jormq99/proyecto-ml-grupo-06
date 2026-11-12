@@ -80,3 +80,16 @@ env/
 *.egg-info
 .coverage
 htmlcov/
+
+# --- Iteración 2 (CNNs preentrenadas) ---
+# Las métricas resumidas, las búsquedas de Optuna y las tablas de enrutamiento sí se versionan;
+# las predicciones fuera de fold (oof, ~73 MB) y las bases SQLite de Optuna quedan locales.
+!results/metrics*.csv
+!results/history/*.csv
+!results/mixed/*.csv
+!results/optuna/*_trials.csv
+!results/optuna/*_best.json
+!results/optuna/priors_test.csv
+results/oof/
+results/optuna/*.db
+results/submission.csv
