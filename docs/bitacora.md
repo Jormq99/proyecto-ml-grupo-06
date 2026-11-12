@@ -87,3 +87,30 @@ No se realizaron avances significativos en esta semana
 
 ### Horas registradas
 - 3 h 10 de nov
+
+## 7 – 9 de noviembre de 2026: Iteración 2 (Luis Fernando Solano)
+
+Trabajo desarrollado en local como un segundo acercamiento, independiente de la Iteración 1. Se integró al repositorio el 11 de noviembre en la rama `Luis/iteracion2_cnn_preentrenadas`.
+
+### Trabajo realizado
+- **Ciclo 2.1:**
+  - EDA del EEG crudo y de los espectrogramas: dos poblaciones según el número de votos, sub-ventanas casi duplicadas, pacientes casi monoclase y artefactos de señal.
+  - Pipeline de preparación con una muestra por `eeg_id`, 5 folds por paciente, imágenes de 8 espectrogramas, baselines clásicos y comparación de 8 CNNs en el fold 0.
+  - Validación cruzada de EfficientNet-B0 y ConvNeXt-T. Ensamble: KL **0.576**, Macro F1 **0.633**, AUC **0.924**.
+- **Ciclo 2.2:**
+  - Auditoría de desbalance: la accuracy y la KL simple están infladas por *Other*, así que se pasa a KL macro.
+  - Optimización con Optuna y entrenamiento solo con EEG de ≥10 votos: mejora la alta calidad (KL 0.342), pero empeoran *Seizure* y los EEG de <10 votos.
+- **Ciclo 2.3:**
+  - Comparación de un modelo único, un modelo de dos cabezas y especialistas con reglas para elegir cuál usar.
+  - El mejor es el ensamble de dos cabezas: KL **0.567**, KL macro 0.399 en alta y 0.755 en baja calidad.
+- Detalle en `docs/informe_resultados.md` y `notebooks/iteracion_2/`.
+
+### Interpretación y límites
+- La Iteración 2 usa su propia partición de 5 folds sobre todos los pacientes, sin holdout aparte. Sus cifras no son directamente comparables con las de la Iteración 1.
+- La optimización de hiperparámetros se hizo solo en el fold 0 y con una semilla por experimento.
+
+### Horas registradas
+- [A COMPLETAR] 7 de nov
+- [A COMPLETAR] 8 de nov
+- [A COMPLETAR] 9 de nov
+- [A COMPLETAR] 11 de nov (integración al repositorio)

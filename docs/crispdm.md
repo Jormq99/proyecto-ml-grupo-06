@@ -11,7 +11,7 @@ El proyecto avanza en **dos iteraciones de CRISP-DM que son dos acercamientos in
 | **1** | CNN pequeña entrenada desde cero (64 × 64, una banda), holdout de pacientes, fold 1 | Fases 1–6 de este documento · `notebooks/01`–`04` · `src/hms_cnn.py` |
 | **2** | CNNs preentrenadas en ImageNet, EEG crudo + espectrogramas, validación cruzada de 5 folds | Sección [Iteración 2](#iteración-2-cnns-preentrenadas-y-validación-cruzada-completa) · `notebooks/iteracion_2/` · `docs/informe_resultados.md` |
 
-**Última actualización:** 2026-11-10
+**Última actualización:** 2026-11-11
 
 ---
 
@@ -308,7 +308,7 @@ La referencia de división aleatoria estratificada de TP3 es útil cuando cada f
 
 # Iteración 2: CNNs preentrenadas y validación cruzada completa
 
-**Estado:** 🔄 Abierta (inicio 7 de noviembre de 2026) · **Responsable:** Luis Fernando Solano
+**Estado:** ✅ Cerrada (7 – 9 de noviembre de 2026) · **Responsable:** Luis Fernando Solano
 
 ## 2.0 Por qué una segunda iteración
 
@@ -341,6 +341,45 @@ La Iteración 2 es un segundo acercamiento: un pipeline nuevo, en `src/` (módul
 - **Una muestra por `eeg_id`** (la sub-ventana central): el 89 % de los EEG repiten el mismo patrón de votos en sub-ventanas que se solapan.
 - **Partición propia e independiente:** `StratifiedGroupKFold` de 5 folds agrupados por paciente (semilla 42) sobre los 1 950 pacientes de `train.csv`. La validación se hace con las predicciones fuera de fold de los 5 folds, sin holdout aparte. El holdout de pacientes pertenece al protocolo de la Iteración 1 y no se usa aquí. Por eso las cifras de las dos iteraciones se comparan como acercamientos distintos y no como el mismo experimento.
 
+## 2.4 Resultados por ciclo
+
+| Ciclo | Resultado principal | Decisión |
+|---|---|---|
+| 2.1 | Ensamble EfficientNet-B0 + ConvNeXt-T: KL 0.576 (0.347 en ≥10 votos), Macro F1 0.633, AUC 0.924. El mejor baseline clásico obtuvo KL 0.882. | Base para los ciclos siguientes |
+| 2.2 | Solo ≥10 votos + Optuna: KL 0.342 en alta calidad, pero KL 0.867 en <10 votos y recall de *Seizure* de 0.62 → 0.45 | No descartar los EEG de pocos votos |
+| 2.3 | Modelo de dos cabezas con compuerta: KL 0.567, KL macro 0.399 / 0.755, recall de *Seizure* 0.65 / 0.70 | **Modelo final de la Iteración 2** |
+
+**Hipótesis:**
+- **H2 confirmada:** con la misma arquitectura (EfficientNet-B0) y los mismos folds, el preentrenamiento en ImageNet mejora la KL en ~0.095 (0.743 → 0.648 en el fold 0).
+- **El EEG crudo aporta:** solo EEG da KL 0.689 y solo espectrogramas de Kaggle 0.751; combinados, 0.648.
+- **Los EEG de pocos votos sí aportan.** Representan las clases de forma distinta, pero un solo modelo que aprende de ambos grupos supera a los especialistas.
+
+## 2.5 Las dos iteraciones lado a lado
+
+| | Iteración 1 | Iteración 2 |
+|---|---|---|
+| Entrada | Espectrograma de Kaggle, 64 × 64, una banda | 4 espectrogramas de Kaggle + 4 del EEG crudo, 512 × 512 |
+| Modelo | CNN pequeña desde cero, CPU | CNNs preentrenadas (timm), GPU, pérdida KL |
+| Unidad de muestra | Fila de `train.csv` | Un EEG (sub-ventana central) |
+| Validación | Fold 1; holdout de pacientes reservado | CV de 5 folds por paciente (predicciones fuera de fold) |
+| Métrica principal | Macro F1 = 0.384 | KL = 0.567 (Macro F1 0.633 en el ciclo 2.1) |
+
+Son acercamientos independientes, así que la tabla compara los enfoques, no el mismo experimento.
+
+Como referencia descriptiva, sobre los 390 pacientes (3 946 EEG) que la Iteración 1 reserva como holdout, las predicciones fuera de fold del ensamble del ciclo 2.1 dan KL 0.514 y Macro F1 0.677. En el resto de pacientes dan KL 0.594 y Macro F1 0.617. Ninguna decisión de la Iteración 2 se tomó con esa división.
+
+## 2.6 Limitaciones y próximos pasos
+
+- Optimización de hiperparámetros solo en el fold 0 y con una semilla por experimento. Las diferencias menores a 0.01 de KL no son concluyentes.
+- LRDA sigue siendo la clase más débil (sensibilidad 0.20 en el ciclo 2.1).
+- Próximos pasos:
+  - más contexto temporal del EEG;
+  - modelos 1D sobre la señal cruda para diversificar el ensamble;
+  - pseudo-etiquetado de los EEG de pocos votos;
+  - varias semillas.
+
+**Estado de la Iteración 2:** ✅ Cerrada (9 de noviembre de 2026). Integrada al repositorio el 11 de noviembre de 2026.
+
 ---
 
 ## Resumen de Avance
@@ -354,11 +393,13 @@ La Iteración 2 es un segundo acercamiento: un pipeline nuevo, en `src/` (módul
 | 5. Evaluation | 🔄 Parcial | 15% | Ambos |
 | 6. Deployment | 📋 Pendiente | 0% | [A ASIGNAR] |
 
+La tabla anterior corresponde a la Iteración 1. Iteración 2: fases 1–5 completadas en tres ciclos (ver [Iteración 2](#iteración-2-cnns-preentrenadas-y-validación-cruzada-completa)); la fase 6 queda pendiente para la entrega final.
+
 **Próxima reunión de avance**: [FECHA]
 **Responsable de seguimiento**: [A ASIGNAR]
 
 ---
 
 **Versión**: 2.1
-**Última actualización**: 2026-11-10
+**Última actualización**: 2026-11-11
 **Próxima revisión**: Próxima iteración del experimento
